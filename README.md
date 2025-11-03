@@ -2,8 +2,10 @@
 
 https://forscore-pdf-optimizer.0110.lol
 
+https://www.icloud.com/shortcuts/b11943c5fa2641458b9f46a809a05a95
+
 How this works in a nutshell:
-1. shrink DPI to 264-300. DPI 264 matches most iPads of 264 PPI
+1. shrink DPI to 264-330. DPI 264 matches most iPads of 264 PPI
 2. compress PDF to optimize file size further
 
 reason for forscore loading very slowly is because typically, you get PDF files from IMSLP, and those PDF files can go around/above 1200DPI, which kills your iPad's performance. This simply reduces the PDF DPI to 264-300, which is still very high quality.
