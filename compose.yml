@@ -1,0 +1,16 @@
+services:
+  forscore-pdf-optimizer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: forscore-pdf-optimizer
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
