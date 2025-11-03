@@ -31,13 +31,13 @@
 
     <p class="help"><strong>How this works in a nutshell:</strong></p>
     <ol class="help">
-      <li>Reduce the PDF’s image resolution to about <strong>400–500 DPI</strong> (still very high quality).</li>
+      <li>Reduce the PDF's image resolution to about <strong>264-330 DPI</strong> (264 DPI is same as most iPad's 264 PPI display).</li>
       <li>Compress the PDF further to cut file size.</li>
     </ol>
 
     <p class="help">
-      <strong>Why ForScore can feel slow:</strong> Many scores from IMSLP come at <em>&gt;1200 DPI</em>, which is overkill and can slow down your iPad.
-      This tool trims DPI to 400-500 which makes pages load faster while still being high quality.
+      <strong>Why ForScore can feel slow:</strong> Many scores from IMSLP come at <em>&gt;1200 DPI</em> or higher, which is overkill and can slow down your iPad.
+      This tool trims DPI to 264-330 which makes pages load faster while still being high quality.
     </p>
 
     <form id="upload-form" action="/upload" method="post" enctype="multipart/form-data">
@@ -50,7 +50,7 @@
 
     <p class="help"><strong>Behind the scenes, this app:</strong></p>
     <ul class="help">
-      <li>Runs <code>shrinkpdf.sh -r 400 -t 1.25 -g</code> to resample and simplify the PDF.</li>
+      <li>Runs <code>shrinkpdf.sh -r 264 -t 1.25 -g</code> to resample and simplify the PDF.</li>
       <li>Runs <code>pdfsizeopt --use-pngout=no</code> for extra size optimization.</li>
     </ul>
 
@@ -60,7 +60,7 @@
     </div>
 
     <p class="help">
-      Prefer automation? <a href="#" title="iOS Shortcuts placeholder link">Add to iOS Shortcuts</a> (placeholder link).
+      <a href="https://www.icloud.com/shortcuts/b11943c5fa2641458b9f46a809a05a95" title="iOS Shortcuts">Add to iOS Shortcuts</a>.
     </p>
 
     <p class="muted">

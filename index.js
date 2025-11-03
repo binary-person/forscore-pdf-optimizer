@@ -94,9 +94,9 @@ app.post('/upload', upload.single('file'), async (req, res) => {
   }
 
   try {
-    // 1) shrinkpdf: -r 400 -t 1.25 -g -o processN.pdf N.pdf
+    // 1) shrinkpdf: -r 264 -t 1.25 -g -o processN.pdf N.pdf
     const shrinkCmd = '/opt/shrinkpdf/shrinkpdf.sh';
-    const shrinkArgs = ['-r', '400', '-t', '1.25', '-g', '-o', step1Path, uploadedPath];
+    const shrinkArgs = ['-r', '264', '-t', '1.25', '-g', '-o', step1Path, uploadedPath];
     console.log(`${tag} - running ${prettyCmd(shrinkCmd, shrinkArgs)}`);
     await run(shrinkCmd, shrinkArgs);
 
