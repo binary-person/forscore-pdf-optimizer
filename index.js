@@ -58,6 +58,22 @@ function prettyCmd(cmd, args) {
   return escaped.join(' ');
 }
 
+// RFC 5987 encoder for header values (UTF-8)
+function encodeRFC5987(str) {
+  return encodeURIComponent(str)
+    .replace(/['()]/g, escape) // keep quoted-string safe
+    .replace(/\*/g, '%2A')
+    .replace(/%20/g, '%20'); // spaces as %20 (not +)
+}
+
+// Best-effort ASCII fallback for legacy user agents
+function asciiFallback(name, def = 'download') {
+  // strip diacritics, then non-ASCII, then dangerous chars
+  const noDiacritics = name.normalize('NFKD').replace(/[\u0300-\u036f]/g, '');
+  const ascii = noDiacritics.replace(/[^\x20-\x7E]+/g, '');
+  return (ascii || def).replace(/["\\]/g, '');
+}
+
 function scheduleIdleExpiry(job) {
   clearIdleTimer(job);
   job.expiresAt = new Date(Date.now() + DOWNLOAD_IDLE_MS).toISOString();
@@ -76,7 +92,7 @@ async function expireJob(jobId) {
   if (!job) return;
   // delete files
   for (const p of [job.inPath, job.outPath]) {
-    try { if (p) await fsp.unlink(p); } catch (_) {}
+    try { if (p) await fsp.unlink(p); } catch (_) { }
   }
   clearIdleTimer(job);
   job.status = 'expired';
@@ -93,6 +109,8 @@ app.post('/upload', upload.single('file'), async (req, res) => {
 
   const id = randomUUID();
   const tag = `[${id}]`;
+  // https://github.com/expressjs/multer/issues/1104#issuecomment-1152987772
+  req.file.originalname = Buffer.from(req.file.originalname, 'latin1').toString('utf8');
   const origName = path.parse(req.file.originalname || 'score.pdf').base;
 
   const inPath = path.join(TMP_DIR, `${id}.pdf`);
@@ -160,8 +178,8 @@ app.post('/upload', upload.single('file'), async (req, res) => {
       job.status = 'error';
       job.message = 'Processing failed.';
       // cleanup inputs if processing failed
-      try { await fsp.unlink(inPath); } catch (_) {}
-      try { await fsp.unlink(outPath); } catch (_) {}
+      try { await fsp.unlink(inPath); } catch (_) { }
+      try { await fsp.unlink(outPath); } catch (_) { }
     } finally {
       job.durationMs = Date.now() - startedAt;
       const suffix = `Done in ${job.durationMs}ms.`;
@@ -219,8 +237,17 @@ app.get('/download/:id', async (req, res) => {
   clearIdleTimer(job);
   job.streamActive = true;
 
+  // Content headers with UTF-8 filename support
+  const utf8Name = job.origName || 'download.pdf';
+  const fallbackName = asciiFallback(utf8Name);
+  const encodedName = encodeRFC5987(utf8Name);
+
   res.setHeader('Content-Type', 'application/pdf');
-  res.setHeader('Content-Disposition', `attachment; filename="${job.origName.replace(/"/g, '')}"`);
+  // Provide both classic filename= (ASCII) and RFC 5987 filename*= (UTF-8)
+  res.setHeader(
+    'Content-Disposition',
+    `attachment; filename="${fallbackName}"; filename*=UTF-8''${encodedName}`
+  );
 
   const stream = fs.createReadStream(job.outPath);
 

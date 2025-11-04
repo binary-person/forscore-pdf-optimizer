@@ -2,7 +2,7 @@
 
 https://forscore-pdf-optimizer.0110.lol
 
-https://www.icloud.com/shortcuts/b11943c5fa2641458b9f46a809a05a95
+https://www.icloud.com/shortcuts/fd2240209d5c4264b792cd4be398a9a2
 
 (use this one if you don't need the iOS shortcut functionality) https://laurentmmeyer.github.io/ghostscript-pdf-compress.wasm/
 
