@@ -120,30 +120,26 @@
       </p>
 
       <p class="help">
+        <strong>PRO TIP for ForScore users:</strong>
+        <ol>
+          <li>Install iOS shortcut using link above</li>
+          <li>Open ForScore, and go to an annoyingly laggy PDF</li>
+          <li>Share the original PDF</li>
+          <li>In the share menu, scroll down until you see "Edit Actions..."</li>
+          <li>Find "ForScore PDF Optimizer" and add it to favorites, and hit done</li>
+          <li>Click on "ForScore PDF Optimizer"</li>
+          <li>After it's done processing, there should be a popup. Check to see if there's any defects</li>
+          <li>If you're satisfied, click on Share, "Save to Files", and then navigate to On My iPad, forScore, and see if the files are there. If not, go to iCloud Drive and check there.</li>
+          <li>Once you're sure the original laggy PDF exists in the forScore folder, click Save, and "Replace".</li>
+          <li>Reopen ForScore and you should have a laggy-free PDF.</li>
+        </ol>
+      </p>
+
+      <p class="help">
         <strong>If you don't need iOS shortcuts, use this instead:</strong>
         <a href="https://laurentmmeyer.github.io/ghostscript-pdf-compress.wasm/"
           >laurentmmeyer.github.io/ghostscript-pdf-compress.wasm/</a
         >
-      </p>
-
-      <p class="help">
-        <strong>How this works in a nutshell:</strong> Reduces the PDF's image
-        resolution to <strong>&lt;300 DPI</strong> as well as other
-        optimizations.
-      </p>
-
-      <p class="help">
-        <strong>Why ForScore can feel slow:</strong> Many scores from IMSLP come
-        at <em>&gt;1200 DPI</em> or higher, which is overkill and can slow down
-        your iPad. This tool trims DPI to around 264–300 while keeping quality
-        high.
-      </p>
-
-      <p class="help">
-        <strong>Only for ForScore?</strong> No, this can also be used for other
-        PDF-reader apps that have difficulty displaying super-high DPI PDFs. I
-        mainly created this because I use ForScore and it really chokes on those
-        IMSLP files.
       </p>
 
       <form
@@ -167,7 +163,27 @@
       </form>
 
       <p class="help">
-        <strong>After upload, the following is run on the server:</strong>
+        <strong>How this works in a nutshell:</strong> Reduces the PDF's image
+        resolution to <strong>&lt;300 DPI</strong> as well as other
+        optimizations.
+      </p>
+
+      <p class="help">
+        <strong>Why ForScore can feel slow:</strong> Many scores from IMSLP come
+        at <em>&gt;1200 DPI</em> or higher, which is overkill and can slow down
+        your iPad. This tool trims DPI to around 264–300 while keeping quality
+        high.
+      </p>
+
+      <p class="help">
+        <strong>Only for ForScore?</strong> No, this can also be used for other
+        PDF-reader apps that have difficulty displaying super-high DPI PDFs. I
+        mainly created this because I use ForScore and it really chokes on those
+        IMSLP files.
+      </p>
+
+      <p class="help">
+        <strong>For the technically inclined: Behind the scenes, the following is run on the server:</strong>
       </p>
       <div class="block">
         <code
@@ -176,7 +192,7 @@
         >
       </div>
 
-      <p class="help"><strong>Use from the command line:</strong></p>
+      <p class="help"><strong>For the technically inclined: Use from the command line:</strong></p>
       <div class="block">
         <code id="curl-example"></code>
       </div>
