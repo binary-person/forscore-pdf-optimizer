@@ -1,148 +1,306 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <title>forscore-pdf-optimizer</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <style>
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; padding: 2rem; }
-    .card { max-width: 720px; margin: 0 auto; padding: 1.5rem; border: 1px solid #ddd; border-radius: 12px; }
-    h1 { margin-top: 0; font-size: 1.4rem; }
-    form { display: grid; gap: 0.75rem; margin-top: 1rem; }
-    input[type="file"] { padding: 0.75rem; border: 1px solid #ccc; border-radius: 8px; }
-    button { padding: 0.75rem 1rem; border: 0; border-radius: 8px; cursor: pointer; background: #111; color: #fff; }
-    button[disabled] { opacity: 0.6; cursor: not-allowed; }
-    .help { color: #555; font-size: 0.95rem; }
-    ul { margin-top: 0.25rem; }
-    .muted { color: #666; font-size: 0.9rem; margin-top: 1rem; }
-    code { background: #f5f5f5; padding: 0 0.25rem; border-radius: 4px; }
-    .block { background: #f8f8f8; border: 1px solid #e5e5e5; border-radius: 8px; padding: 0.75rem; overflow-x: auto; }
-    .alert { display:none; padding: 0.75rem; border-radius: 8px; margin-top: 0.75rem; }
-    .alert.error { display:block; background: #fee; border: 1px solid #f8b4b4; color: #911; }
-    .alert.success { display:block; background: #eefaf0; border: 1px solid #bde5c8; color: #1b5e20; }
-    .row { display:flex; gap:0.5rem; align-items:center; }
-    .row > * { flex: 1 1 auto; }
-    .row button { flex: 0 0 auto; }
-  </style>
-</head>
-<body>
-  <div class="card">
-    <h1>forscore-pdf-optimizer</h1>
+  <head>
+    <meta charset="utf-8" />
+    <title>forscore-pdf-optimizer</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <style>
+      body {
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+        padding: 2rem;
+      }
+      .card {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 1.5rem;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+      }
+      h1 {
+        margin-top: 0;
+        font-size: 1.4rem;
+      }
+      form {
+        display: grid;
+        gap: 0.75rem;
+        margin-top: 1rem;
+      }
+      input[type="file"] {
+        padding: 0.75rem;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+      }
+      button {
+        padding: 0.75rem 1rem;
+        border: 0;
+        border-radius: 8px;
+        cursor: pointer;
+        background: #111;
+        color: #fff;
+      }
+      button[disabled] {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+      .help {
+        color: #555;
+        font-size: 0.95rem;
+      }
+      ul {
+        margin-top: 0.25rem;
+      }
+      .muted {
+        color: #666;
+        font-size: 0.9rem;
+        margin-top: 1rem;
+      }
+      code {
+        background: #f5f5f5;
+        padding: 0 0.25rem;
+        border-radius: 4px;
+      }
+      .block {
+        background: #f8f8f8;
+        border: 1px solid #e5e5e5;
+        border-radius: 8px;
+        padding: 0.75rem;
+        overflow-x: auto;
+      }
+      .alert {
+        display: none;
+        padding: 0.75rem;
+        border-radius: 8px;
+        margin-top: 0.75rem;
+      }
+      .alert.error {
+        display: block;
+        background: #fee;
+        border: 1px solid #f8b4b4;
+        color: #911;
+      }
+      .alert.success {
+        display: block;
+        background: #eefaf0;
+        border: 1px solid #bde5c8;
+        color: #1b5e20;
+      }
+      .row {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+      }
+      .row > * {
+        flex: 1 1 auto;
+      }
+      .row button {
+        flex: 0 0 auto;
+      }
+      .small {
+        font-size: 0.9rem;
+        color: #555;
+      }
 
-    <p class="help"><strong>How this works in a nutshell:</strong></p>
-    <ol class="help">
-      <li>Reduce the PDF's image resolution to about <strong>264-330 DPI</strong> (264 DPI is same as most iPad's 264 PPI display).</li>
-      <li>Compress the PDF further to cut file size.</li>
-    </ol>
+      /* Preserve newlines/whitespace for the curl example */
+      #curl-example {
+        white-space: pre;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>forscore-pdf-optimizer</h1>
 
-    <p class="help">
-      <strong>Why ForScore can feel slow:</strong> Many scores from IMSLP come at <em>&gt;1200 DPI</em> or higher, which is overkill and can slow down your iPad.
-      This tool trims DPI to 264-330 which makes pages load faster while still being high quality.
-    </p>
+      <p class="help">
+        <a
+          href="https://www.icloud.com/shortcuts/b11943c5fa2641458b9f46a809a05a95"
+          title="iOS Shortcuts"
+          >Add to iOS Shortcuts</a
+        >.
+      </p>
 
-    <form id="upload-form" action="/upload" method="post" enctype="multipart/form-data">
-      <div class="row">
-        <input id="file-input" type="file" name="file" accept="application/pdf" required />
-        <button id="submit-btn" type="submit">Optimize PDF</button>
+      <p class="help">
+        <strong>If you don't need iOS shortcuts, use this instead:</strong>
+        <a href="https://laurentmmeyer.github.io/ghostscript-pdf-compress.wasm/"
+          >laurentmmeyer.github.io/ghostscript-pdf-compress.wasm/</a
+        >
+      </p>
+
+      <p class="help">
+        <strong>How this works in a nutshell:</strong> Reduces the PDF's image
+        resolution to <strong>&lt;300 DPI</strong> as well as other
+        optimizations.
+      </p>
+
+      <p class="help">
+        <strong>Why ForScore can feel slow:</strong> Many scores from IMSLP come
+        at <em>&gt;1200 DPI</em> or higher, which is overkill and can slow down
+        your iPad. This tool trims DPI to around 264–300 while keeping quality
+        high.
+      </p>
+
+      <p class="help">
+        <strong>Only for ForScore?</strong> No, this can also be used for other
+        PDF-reader apps that have difficulty displaying super-high DPI PDFs. I
+        mainly created this because I use ForScore and it really chokes on those
+        IMSLP files.
+      </p>
+
+      <form
+        id="upload-form"
+        action="/upload"
+        method="post"
+        enctype="multipart/form-data"
+      >
+        <div class="row">
+          <input
+            id="file-input"
+            type="file"
+            name="file"
+            accept="application/pdf"
+            required
+          />
+          <button id="submit-btn" type="submit">Optimize PDF</button>
+        </div>
+        <div id="alert" class="alert" role="status" aria-live="polite"></div>
+        <div id="jobinfo" class="small"></div>
+      </form>
+
+      <p class="help">
+        <strong>After upload, the following is run on the server:</strong>
+      </p>
+      <div class="block">
+        <code
+          >gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook
+          -dNOPAUSE -dQUIET -dBATCH -sOutputFile=output.pdf input.pdf</code
+        >
       </div>
-      <div id="alert" class="alert" role="status" aria-live="polite"></div>
-    </form>
 
-    <p class="help"><strong>Behind the scenes, this app:</strong></p>
-    <ul class="help">
-      <li>Runs <code>shrinkpdf.sh -r 264 -t 1.25 -g</code> to resample and simplify the PDF.</li>
-      <li>Runs <code>pdfsizeopt --use-pngout=no</code> for extra size optimization.</li>
-    </ul>
+      <p class="help"><strong>Use from the command line:</strong></p>
+      <div class="block">
+        <code id="curl-example"></code>
+      </div>
 
-    <p class="help"><strong>Use from the command line:</strong></p>
-    <div class="block">
-      <code id="curl-example"></code>
+      <p class="muted">
+        Created with help of ChatGPT · Licensed MIT · Source:
+        <a
+          href="https://github.com/binary-person/forscore-pdf-optimizer"
+          target="_blank"
+          rel="noopener"
+        >
+          github.com/binary-person/forscore-pdf-optimizer
+        </a>
+      </p>
     </div>
 
-    <p class="help">
-      <a href="https://www.icloud.com/shortcuts/b11943c5fa2641458b9f46a809a05a95" title="iOS Shortcuts">Add to iOS Shortcuts</a>.
-    </p>
+    <script>
+      (function () {
+        const form = document.getElementById("upload-form");
+        const fileInput = document.getElementById("file-input");
+        const submitBtn = document.getElementById("submit-btn");
+        const alertBox = document.getElementById("alert");
+        const jobInfo = document.getElementById("jobinfo");
+        const curlEl = document.getElementById("curl-example");
 
-    <p class="muted">
-      Created with help of ChatGPT · Licensed MIT · Source:
-      <a href="https://github.com/binary-person/forscore-pdf-optimizer" target="_blank" rel="noopener">
-        github.com/binary-person/forscore-pdf-optimizer
-      </a>
-    </p>
-  </div>
+        // Build curl example with preserved newlines
+        const base = new URL("/", window.location.href).href.replace(
+          /\/+$/,
+          ""
+        );
+        curlEl.textContent = `# Upload -> get job id
+JOB=$(curl -s -F "file=@/path/to/your.pdf" ${base}/upload | jq -r .jobId)
 
-  <script>
-    (function () {
-      const form = document.getElementById('upload-form');
-      const fileInput = document.getElementById('file-input');
-      const submitBtn = document.getElementById('submit-btn');
-      const alertBox = document.getElementById('alert');
-      const curlEl = document.getElementById('curl-example');
+# Poll until ready
+until [ "$(curl -s ${base}/status/$JOB | jq -r .status)" = "done" ]; do sleep 2; done
 
-      // Build curl example from current location
-      const uploadURL = new URL('/upload', window.location.href).href;
-      curlEl.textContent = `curl -F "file=@/path/to/your.pdf" -o optimized.pdf ${uploadURL}`;
+# Download (expires after download or after 5 minutes of inactivity)
+curl -L -o optimized.pdf ${base}/download/$JOB`;
 
-      function setAlert(type, msg) {
-        const alertBox = document.getElementById('alert');
-        alertBox.className = 'alert ' + (type ? type : '');
-        alertBox.textContent = msg || '';
-
-        if (type) {
-          // clear any previous inline 'display:none' so CSS classes take effect
-          alertBox.style.display = '';
-        } else {
-          alertBox.style.display = 'none';
-        }
-      }
-
-      function disableUI(disabled, label) {
-        submitBtn.disabled = disabled;
-        submitBtn.textContent = disabled ? (label || 'Processing…') : 'Optimize PDF';
-        fileInput.disabled = disabled;
-      }
-
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        setAlert('', '');
-        if (!fileInput.files || !fileInput.files[0]) {
-          setAlert('error', 'Please choose a PDF file first.');
-          return;
+        function setAlert(type, msg) {
+          alertBox.className = "alert " + (type ? type : "");
+          alertBox.textContent = msg || "";
+          alertBox.style.display = type ? "" : "none";
         }
 
-        const originalName = fileInput.files[0].name || 'optimized.pdf';
-        disableUI(true, 'Processing…');
+        function disableUI(disabled, label) {
+          submitBtn.disabled = disabled;
+          submitBtn.textContent = disabled
+            ? label || "Processing…"
+            : "Optimize PDF";
+          fileInput.disabled = disabled;
+        }
 
-        try {
-          const fd = new FormData();
-          fd.append('file', fileInput.files[0]);
-          const resp = await fetch(form.action, { method: 'POST', body: fd });
+        let pollTimer = null;
 
-          const contentType = resp.headers.get('content-type') || '';
-          if (resp.ok && contentType.includes('application/pdf')) {
-            const blob = await resp.blob();
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = originalName;
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-            URL.revokeObjectURL(url);
-
-            setAlert('success', 'Download started.');
-            form.reset();
-          } else {
-            const text = await resp.text().catch(() => 'Processing failed.');
-            setAlert('error', (text && text.trim()) || 'Processing failed.');
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          setAlert("", "");
+          jobInfo.textContent = "";
+          if (!fileInput.files || !fileInput.files[0]) {
+            setAlert("error", "Please choose a PDF file first.");
+            return;
           }
-        } catch (err) {
-          setAlert('error', 'Processing failed. Please try again.');
-        } finally {
-          disableUI(false);
-        }
-      });
-    })();
-  </script>
-</body>
+
+          const originalName = fileInput.files[0].name || "optimized.pdf";
+          disableUI(true, "Uploading…");
+
+          try {
+            const fd = new FormData();
+            fd.append("file", fileInput.files[0]);
+            const resp = await fetch(form.action, { method: "POST", body: fd });
+            const data = await resp.json().catch(() => ({}));
+
+            if (!resp.ok || !data.jobId) {
+              const text = (data && data.error) || "Upload failed.";
+              setAlert("error", text);
+              disableUI(false);
+              return;
+            }
+
+            const jobId = data.jobId;
+            jobInfo.textContent = `Job: ${jobId}. Waiting for processing…`;
+            setAlert("success", "Upload successful. Processing started.");
+
+            const poll = async () => {
+              try {
+                const s = await fetch(`${base}/status/${jobId}`).then((r) =>
+                  r.json()
+                );
+                if (s.status === "done") {
+                  clearInterval(pollTimer);
+                  jobInfo.textContent = `Job: ${jobId}. Ready. Starting download…`;
+                  setAlert("success", "Optimized file is ready. Downloading…");
+
+                  const a = document.createElement("a");
+                  a.href = `${base}/download/${jobId}`;
+                  a.download = originalName;
+                  document.body.appendChild(a);
+                  a.click();
+                  a.remove();
+
+                  disableUI(false);
+                  form.reset();
+                } else if (s.status === "error") {
+                  clearInterval(pollTimer);
+                  setAlert("error", s.message || "Processing failed.");
+                  disableUI(false);
+                } else if (s.status === "expired") {
+                  clearInterval(pollTimer);
+                  setAlert("error", "The job has expired. Please re-upload.");
+                  disableUI(false);
+                }
+              } catch (_) {
+                /* ignore transient errors */
+              }
+            };
+            pollTimer = setInterval(poll, 2000);
+            poll();
+          } catch (err) {
+            setAlert("error", "Processing failed. Please try again.");
+            disableUI(false);
+          }
+        });
+      })();
+    </script>
+  </body>
 </html>
