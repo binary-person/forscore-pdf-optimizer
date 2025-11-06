@@ -157,6 +157,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
         '-dNOPAUSE',
         '-dQUIET',
         '-dBATCH',
+        '-dColorConversionStrategy=/LeaveColorUnchanged',
         `-sOutputFile=${outPath}`,
         inPath,
       ];
